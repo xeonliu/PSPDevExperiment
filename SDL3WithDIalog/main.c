@@ -6,10 +6,16 @@
 #include <pspgu.h>
 #include <pspgum.h>
 #include <string.h>
-/* Define the module info section */
-PSP_MODULE_INFO("GETREKT", 0, 1, 1);
-/* Define the main thread's attribute value (optional) */
-PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
+
+// /* Define the module info section */
+// PSP_MODULE_INFO("GETREKT", 0, 1, 1);
+// /* Define the main thread's attribute value (optional) */
+// PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
+
+/* You can skip the "register callback" section if you have included SDL_main.h*/
+/* Look at SDL3 documentation for more information.*/
+#include <SDL3/SDL_main.h>
+
 pspUtilityMsgDialogParams dialog;
 
 static void ConfigureDialog(pspUtilityMsgDialogParams *dialog, size_t dialog_size)
@@ -66,6 +72,7 @@ static void ShowMessageDialog(const char *message, int enableYesno)
 
         case 0:
             // the flag is 0, not 4???
+            // no default, fall through?
             return;
         }
 
@@ -73,6 +80,7 @@ static void ShowMessageDialog(const char *message, int enableYesno)
         sceGuSwapBuffers();
     }
 }
+
 int main(int argc, char *argv[])
 {
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD);
