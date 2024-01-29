@@ -4,8 +4,9 @@
 #include <libswscale/swscale.h>
 #include <libavutil/avutil.h>
 
-// SDL3 Lib
-#include <SDL3/SDL.h>
+// SDL2 Lib
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_thread.h>
 
 // Can be replaced by A Class in C++ Later.
 // A Thread safe queue.
@@ -15,15 +16,15 @@ typedef struct PacketQueue
     AVPacketList *first_pkt, *last_pkt;
     int nb_packets;
     int size;
-    SDL_Mutex *mutex;
-    SDL_Condition *cond;
+    SDL_mutex *mutex;
+    SDL_cond *cond;
 } PacketQueue;
 
 void packet_queue_init(PacketQueue *q)
 {
     memset(q, 0, sizeof(PacketQueue));
     q->mutex = SDL_CreateMutex();
-    q->cond = SDL_CreateCondition();
+    q->cond = SDL_CreateCond();
 }
 
 int packet_queue_put(PacketQueue *q, AVPacket *pkt)
@@ -52,7 +53,7 @@ int packet_queue_put(PacketQueue *q, AVPacket *pkt)
     q->last_pkt = pkt1;
     q->nb_packets++;
     q->size += pkt1->pkt.size;
-    SDL_SignalCondition(q->cond);
+    SDL_CondSignal(q->cond);
     SDL_UnlockMutex(q->mutex);
     return 0;
 }
@@ -92,7 +93,7 @@ static int packet_queue_get(PacketQueue *q, AVPacket *pkt, int block)
         }
         else
         {
-            SDL_WaitCondition(q->cond, q->mutex);
+            SDL_CondWait(q->cond, q->mutex);
         }
     }
     SDL_UnlockMutex(q->mutex);
