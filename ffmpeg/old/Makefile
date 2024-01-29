@@ -1,7 +1,7 @@
 TARGET = main
 OBJS= main.o
 CFLAGS = -g
-LIBS =   -lSDL3 -lavformat -lavcodec -lavutil -lswscale -lm -lz  -lGL -lGLU -lglut -lz \
+LIBS =   -lSDLmain -lSDL2 -lavformat -lavcodec -lavutil -lswscale -lm -lz  -lGL -lGLU -lglut -lz \
          -lpspvfpu -lpsphprm -lpspsdk -lpspctrl -lpspumd -lpsprtc -lpsppower -lpspgum -lpspgu -lpspaudiolib -lpspaudio -lpsphttp -lpspssl -lpspwlan \
          -lpspnet_adhocmatching -lpspnet_adhoc -lpspnet_adhocctl -lm -lpspvram
 BUILD_PRX = 1
